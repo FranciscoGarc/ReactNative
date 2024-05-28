@@ -13,9 +13,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const App = () => {
   const [nombre, setNombre] = useState('');
-  const [fechaReserva, setFechaReserva] = useState(new Date());
-  const [cantidadPersonas, setCantidadPersonas] = useState('');
-  const [clientes, setClientes] = useState([]);
+  const [carnet, setCarnet] = useState('');
+  const [materiaFavorita, setMateriaFavorita] = useState('');
+  const [fechaNacimiento, setFechaNacimiento] = useState(new Date());
+  const [estudiantes, setEstudiantes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
@@ -24,7 +25,7 @@ const App = () => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
-    setFechaReserva(currentDate);
+    setFechaNacimiento(currentDate);
   };
 
   const showMode = (currentMode) => {
@@ -36,27 +37,29 @@ const App = () => {
     showMode('date');
   };
 
-  const agregarCliente = () => {
-    const nuevoCliente = {
-      id: clientes.length ? clientes[clientes.length - 1].id + 1 : 1,
+  const agregarEstudiante = () => {
+    const nuevoEstudiante = {
+      id: estudiantes.length ? estudiantes[estudiantes.length - 1].id + 1 : 1,
       nombre: nombre,
-      fechaReserva: fechaReserva,
-      cantidadPersonas: cantidadPersonas
+      carnet: carnet,
+      materiaFavorita: materiaFavorita,
+      fechaNacimiento: fechaNacimiento
     };
-    setClientes([...clientes, nuevoCliente]);
+    setEstudiantes([...estudiantes, nuevoEstudiante]);
     setNombre('');
-    setFechaReserva(new Date());
-    setCantidadPersonas('');
+    setCarnet('');
+    setMateriaFavorita('');
+    setFechaNacimiento(new Date());
     setModalVisible(false);
   };
 
-  const eliminarCliente = (id) => {
-    setClientes(clientes.filter((cliente) => cliente.id !== id));
+  const eliminarEstudiante = (id) => {
+    setEstudiantes(estudiantes.filter((estudiante) => estudiante.id !== id));
   };
 
   return (
     <View style={styles.container}>
-      <Button title="Agregar Cliente" onPress={() => setModalVisible(true)} />
+      <Button title="Agregar Estudiante" onPress={() => setModalVisible(true)} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -69,33 +72,35 @@ const App = () => {
           <View style={styles.modalContent}>
             <TextInput
               style={styles.input}
-              placeholder="Nombre del Cliente"
+              placeholder="Nombre"
               value={nombre}
               onChangeText={setNombre}
             />
             <TextInput
               style={styles.input}
-              placeholder="Cantidad de Personas"
-              value={cantidadPersonas}
-              onChangeText={setCantidadPersonas}
-              keyboardType="numeric"
+              placeholder="Carnet"
+              value={carnet}
+              onChangeText={setCarnet}
             />
-            <TouchableOpacity onPress={showDatepicker}>
-              <Text>Seleccionar fecha de Reserva</Text>
-            </TouchableOpacity>
-            <Text>Fecha seleccionada: {fechaReserva.toLocaleString()}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Materia Favorita"
+              value={materiaFavorita}
+              onChangeText={setMateriaFavorita}
+            />
+            <TouchableOpacity onPress={showDatepicker}><Text>Seleccionar Fecha de Nacimiento</Text></TouchableOpacity>
+            <Text>Fecha seleccionada: {fechaNacimiento.toLocaleDateString()}</Text>
             {show && (
               <DateTimePicker
                 testID="dateTimePicker"
                 value={date}
                 mode={mode}
-                is24Hour={false}
-                display="default"
+                is24Hour={true}
                 onChange={onChange}
-                locale="es-ES"
+                locale='es-ES'
               />
             )}
-            <Button title="Agregar Cliente" onPress={agregarCliente} />
+            <Button title="Agregar Estudiante" onPress={agregarEstudiante} />
             <Button
               title="Cancelar"
               onPress={() => setModalVisible(false)}
@@ -105,18 +110,19 @@ const App = () => {
         </View>
       </Modal>
       <FlatList
-        data={clientes}
+        data={estudiantes}
         renderItem={({ item }) => (
-          <View style={styles.clienteItem}>
-            <Text style={styles.clienteNombre}>ID: {item.id}</Text>
-            <Text style={styles.clienteNombre}>Nombre: {item.nombre}</Text>
-            <Text style={styles.clienteCantidad}>Cantidad de Personas: {item.cantidadPersonas}</Text>
-            <Text style={styles.clienteFecha}>
-              Fecha de Reserva: {item.fechaReserva.toDateString()}
+          <View style={styles.estudianteItem}>
+            <Text style={styles.estudianteNombre}>ID: {item.id}</Text>
+            <Text style={styles.estudianteNombre}>Nombre: {item.nombre}</Text>
+            <Text style={styles.estudianteCarnet}>Carnet: {item.carnet}</Text>
+            <Text style={styles.estudianteMateria}>Materia Favorita: {item.materiaFavorita}</Text>
+            <Text style={styles.estudianteFecha}>
+              Fecha de Nacimiento: {item.fechaNacimiento.toDateString()}
             </Text>
             <Button
               title="Eliminar"
-              onPress={() => eliminarCliente(item.id)}
+              onPress={() => eliminarEstudiante(item.id)}
               color="red"
             />
           </View>
@@ -152,21 +158,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
   },
-  clienteItem: {
+  estudianteItem: {
     backgroundColor: '#f0f0f0',
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
     marginTop: 5,
   },
-  clienteNombre: {
+  estudianteNombre: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-  clienteCantidad: {
+  estudianteCarnet: {
     fontSize: 16,
   },
-  clienteFecha: {
+  estudianteMateria: {
+    fontSize: 16,
+  },
+  estudianteFecha: {
     fontSize: 16,
   },
 });
