@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Animated, Easing } from 'react-native';
 
 export default function SplashScreen() {
-    
+
   const [counter, setCounter] = useState(3);
   const rotateValue = useRef(new Animated.Value(0)).current;
 
@@ -15,7 +15,7 @@ export default function SplashScreen() {
     Animated.loop(
       Animated.timing(rotateValue, {
         toValue: 1,
-        duration: 2000,
+        duration: 1000,
         easing: Easing.linear,
         useNativeDriver: true,
       })

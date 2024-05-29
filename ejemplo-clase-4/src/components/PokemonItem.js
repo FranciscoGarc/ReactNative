@@ -1,38 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, Dimensions, TextInput, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 
 const WIDTH = Dimensions.get('window').width;
 const numColumns = 3;
 
-const PokemonItem = React.memo(({ item }) => (
-  <View style={styles.card}>
-    <Image
-      style={styles.image}
-      source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png` }}
-    />
-    <Text style={styles.title}>{item.name}</Text>
-  </View>
-));
+const PokemonItem = ({ item }) => {
+  const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    const fetchDescription = async () => {
+      try {
+        const response = await fetch(item.url);
+        const data = await response.json();
+        const description = data.abilities.map(ability => ability.ability.name).join(', ');
+        setDescription(description);
+      } catch (error) {
+        console.error('Error fetching Pokémon details:', error);
+      }
+    };
+    fetchDescription();
+  }, [item.url]);
+
+  return (
+    <View style={styles.card}>
+      <Image
+        style={styles.image}
+        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item.id}.png` }}
+      />
+      <Text style={styles.title}>{item.name}</Text>
+      <Text style={styles.description}>{description}</Text>
+    </View>
+  );
+};
 
 export default PokemonItem;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 50,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center'
-  },
-  list: {
-    justifyContent: 'center',
-  },
   card: {
     backgroundColor: '#f8f8f8',
     borderRadius: 8,
@@ -53,11 +56,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textTransform: 'capitalize',
   },
+  description: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 5,
+  },
   image: {
     width: 80,
     height: 80,
-  },
-  loading: {
-    marginTop: 20,
   },
 });

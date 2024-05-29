@@ -6,6 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import PokemonList from '../screens/PokemonList';
 import HomeScreen from '../screens/HomeScreen';
 import PokemonAxios from '../screens/PokemonAxios';
+import UserList from '../screens/UserList';
 
 // Navegador Bottom Tabs Navigator
 const Tab = createBottomTabNavigator();
@@ -60,7 +61,22 @@ export default function BottomTab() {
         ),
       }}
     />
+          <Tab.Screen
+        name="UserList"
+        component={UserList} // Agrega la nueva pantalla aquí
+        options={{
+          title: 'Lista de Usuarios',
+          tabBarActiveTintColor: '#28a745',
+          headerStyle: {
+            backgroundColor: '#28a745',
+          },
+          headerTintColor: '#fff',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="people" color={color} size={24} />
+          ),
+        }}
+      />
   </Tab.Navigator>
-  
+
   );
 }
