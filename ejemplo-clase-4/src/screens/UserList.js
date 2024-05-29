@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, ActivityIndicator, Dimensions } from 'react-native';
+
+const WIDTH = Dimensions.get('window').width;
+const numColumns = 2;
 
 const UserItem = ({ item }) => (
   <View style={styles.card}>
@@ -50,6 +53,7 @@ export default function UserList() {
           data={filteredUsers}
           renderItem={({ item }) => <UserItem item={item} />}
           keyExtractor={(item) => item.id.toString()}
+          numColumns={numColumns}
           contentContainerStyle={styles.list}
         />
       )}
@@ -72,6 +76,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
     borderRadius: 8,
     margin: 5,
+    width: WIDTH / numColumns - 15,
+    alignItems: 'center',
     padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
